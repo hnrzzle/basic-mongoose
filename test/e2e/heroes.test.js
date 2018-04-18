@@ -5,7 +5,7 @@ const { dropCollection } = require('./db');
 
 describe('Overwatch API', () => {
 
-    before(() => dropCollection('heroes'));
+    before(() => dropCollection('heros'));
 
     let tracer = {
         alias: 'Tracer',
@@ -39,24 +39,24 @@ describe('Overwatch API', () => {
         ultimate: 'Dragon Blade'
     };
 
-    it.skip('saves and gets a hero', () => {
-        return new Hero(tracer).save()
-            .then(saved => {
-                saved = saved.toJSON();
-                const { _id, __v } = saved;
-                assert.ok(_id);
-                assert.equal(__v, 0);
-                assert.deepEqual(saved, {
-                    _id, __v,
-                    ...tracer
-                });
-                tracer = saved;
-                return Hero.findById(saved._id).lean();
-            })
-            .then(found => {
-                assert.deepEqual(found, tracer);
-            });
-    });
+    // it.skip('saves and gets a hero', () => {
+    //     return new Hero(tracer).save()
+    //         .then(saved => {
+    //             saved = saved.toJSON();
+    //             const { _id, __v } = saved;
+    //             assert.ok(_id);
+    //             assert.equal(__v, 0);
+    //             assert.deepEqual(saved, {
+    //                 _id, __v,
+    //                 ...tracer
+    //             });
+    //             tracer = saved;
+    //             return Hero.findById(saved._id).lean();
+    //         })
+    //         .then(found => {
+    //             assert.deepEqual(found, tracer);
+    //         });
+    // });
     it('saves hero', () => {
         return request.post('/heroes')
             .send(tracer)
@@ -107,15 +107,15 @@ describe('Overwatch API', () => {
             });
     });
 
-    it('deletes a hero', () => {
-        return request.delete(`/heroes/${genji._id}`)
-            .then(() => {
-                return Hero.findById(genji._id);
-            })
-            .then(found => {
-                assert.isNull(found);
-            });
-    });
+    // it('deletes a hero', () => {
+    //     return request.delete(`/heroes/${genji._id}`)
+    //         .then(() => {
+    //             return Hero.findById(genji._id);
+    //         })
+    //         .then(found => {
+    //             assert.isNull(found);
+    //         });
+    // });
 
 
 
