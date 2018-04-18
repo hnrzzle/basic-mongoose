@@ -107,15 +107,22 @@ describe('Overwatch API', () => {
             });
     });
 
-    // it('deletes a hero', () => {
-    //     return request.delete(`/heroes/${genji._id}`)
-    //         .then(() => {
-    //             return Hero.findById(genji._id);
-    //         })
-    //         .then(found => {
-    //             assert.isNull(found);
-    //         });
-    // });
+    it('deletes a hero', () => {
+        return request.delete(`/heroes/${genji._id}`)
+            .then(() => {
+                return Hero.findById(genji._id);
+            })
+            .then(found => {
+                assert.isNull(found);
+            });
+    });
+
+    it('queries heroes', () => {
+        return request.get('/heroes?role=Flanker')
+            .then(({ body }) => {
+                assert.deepEqual(body, [tracer].map(getFields));
+            });
+    });
 
 
 
