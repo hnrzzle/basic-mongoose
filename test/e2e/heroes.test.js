@@ -97,4 +97,26 @@ describe('Overwatch API', () => {
                 assert.deepEqual(updated, genji);
             });
     });
+
+    const getFields = ({ _id, alias, role, affliation }) => ({ _id, alias, role, affliation });
+
+    it('gets all heroes but only selected fields', () => {
+        return request.get('/heroes')
+            .then(({ body }) => {
+                assert.deepEqual(body, [tracer, genji].map(getFields));
+            });
+    });
+
+    it('deletes a hero', () => {
+        return request.delete(`/heroes/${genji._id}`)
+            .then(() => {
+                return Hero.findById(genji._id);
+            })
+            .then(found => {
+                assert.isNull(found);
+            });
+    });
+
+
+
 });
