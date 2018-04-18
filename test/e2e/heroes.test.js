@@ -29,7 +29,7 @@ describe('Overwatch API', () => {
         nationality: 'Japanese',
         age: 35,
         role: 'Flanker',
-        affliation: 'Overwatch',
+        affiliation: 'Overwatch',
         health: 200,
         primaryFire: {
             weapon: 'Shuriken',
@@ -98,7 +98,7 @@ describe('Overwatch API', () => {
             });
     });
 
-    const getFields = ({ _id, alias, role, affliation }) => ({ _id, alias, role, affliation });
+    const getFields = ({ _id, alias, role, affiliation }) => ({ _id, alias, role, affiliation });
 
     it('gets all heroes but only selected fields', () => {
         return request.get('/heroes')
