@@ -23,4 +23,13 @@ describe('Hero model', () => {
         assert.deepEqual(tracer.toJSON(), { _id: tracer._id, ...data });
     });
 
+    const getValidationErrors = validation => {
+        assert.isDefined(validation, 'expected validation errors but got none');
+        return validation.errors;
+    };
+
+    it('required fields', () => {
+        console.log(getValidationErrors);
+    });
+
 });
