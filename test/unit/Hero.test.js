@@ -3,12 +3,13 @@ const Hero = require('../../lib/models/Hero');
 
 describe('Hero model', () => {
 
-    it('valid model', () => {
+    it('valid good model', () => {
         const data = {
             alias: 'Tracer',
             name: 'Lena Oxton',
             nationality: 'British',
             age: 26,
+            role: 'Flanker',
             affiliation: 'Overwatch',
             health: 150,
             primaryFire: {
@@ -31,12 +32,27 @@ describe('Hero model', () => {
     it('required fields', () => {
         const hero = new Hero({});
         const errors = getValidationErrors(hero.validateSync());
-        assert.equal(Object.keys(errors).length, 4); // should be 5
+        assert.equal(Object.keys(errors).length, 5);
+        assert.equal(errors.role.kind, 'required');
         assert.equal(errors.alias.kind, 'required');
         assert.equal(errors.ultimate.kind, 'required');
         assert.equal(errors['primaryFire.weapon'].kind, 'required');
         assert.equal(errors['primaryFire.damage'].kind, 'required');
-        // assert.equal(errors.abilites.kind, 'required');
+    });
+    it('role must be enum, age must be a number, damage must be positive number', () => {
+        const hero = new Hero({
+            alias: 'test',
+            age: 'test',
+            role: 'test',
+            primaryFire: {
+                weapon: 'test',
+                damage: -20
+            },
+            ultimate: 'test'
+        });
+        const errors = getValidationErrors(hero.validateSync());
+        assert.equal(errors.role.kind, 'enum');
+        assert.equal(errors['primaryFire.damage'].kind, 'min');
     });
 
 });
