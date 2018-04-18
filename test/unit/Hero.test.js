@@ -29,7 +29,14 @@ describe('Hero model', () => {
     };
 
     it('required fields', () => {
-        console.log(getValidationErrors);
+        const hero = new Hero({});
+        const errors = getValidationErrors(hero.validateSync());
+        assert.equal(Object.keys(errors).length, 4); // should be 5
+        assert.equal(errors.alias.kind, 'required');
+        assert.equal(errors.ultimate.kind, 'required');
+        assert.equal(errors['primaryFire.weapon'].kind, 'required');
+        assert.equal(errors['primaryFire.damage'].kind, 'required');
+        // assert.equal(errors.abilites.kind, 'required');
     });
 
 });
