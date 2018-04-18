@@ -23,7 +23,7 @@ describe('Overwatch API', () => {
         ultimate: 'Pulse Bomb'
     };
 
-    it('saves and gets a hero', () => {
+    it.skip('saves and gets a hero', () => {
         return new Hero(tracer).save()
             .then(saved => {
                 saved = saved.toJSON();
@@ -39,6 +39,14 @@ describe('Overwatch API', () => {
             })
             .then(found => {
                 assert.deepEqual(found, tracer);
+            });
+    });
+    it('posts hero', () => {
+        return request.post('/heroes')
+            .send(tracer)
+            .then(({ body }) => {
+                const { _id, __v } = body;
+                assert.ok(_id);
             });
     });
 
