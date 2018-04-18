@@ -23,6 +23,22 @@ describe('Overwatch API', () => {
         ultimate: 'Pulse Bomb'
     };
 
+    let genji = {
+        alias: 'Genji',
+        name: 'Genji Schimada',
+        nationality: 'Japanese',
+        age: 35,
+        role: 'Flanker',
+        affliation: 'Overwatch',
+        health: 200,
+        primaryFire: {
+            weapon: 'Shuriken',
+            damage: 28
+        },
+        abilites: ['Cyber-Agility', 'Fan of Blades', 'Swift Strike', 'Deflect'],
+        ultimate: 'Dragon Blade'
+    };
+
     it.skip('saves and gets a hero', () => {
         return new Hero(tracer).save()
             .then(saved => {
@@ -41,13 +57,44 @@ describe('Overwatch API', () => {
                 assert.deepEqual(found, tracer);
             });
     });
-    it('posts hero', () => {
+    it('saves hero', () => {
         return request.post('/heroes')
             .send(tracer)
             .then(({ body }) => {
                 const { _id, __v } = body;
                 assert.ok(_id);
+                assert.equal(__v, 0);
+                assert.deepEqual(body, {
+                    _id, __v, ...tracer
+                });
+                tracer = body;
             });
     });
 
+    const roundTrip = doc => JSON.parse(JSON.stringify(doc.toJSON()));
+
+    it('gets a hero by id', () => {
+        return Hero.create(genji).then(roundTrip)
+            .then(saved => {
+                genji = saved;
+                return request.get(`/heroes/${genji._id}`);
+            })
+            .then(({ body }) => {
+                assert.deepEqual(body, genji);
+            });
+    });
+
+    it('updates a hero', () => {
+        genji.role = 'DPS';
+        
+        return request.put(`/heroes/${genji._id}`)
+            .send(genji)
+            .then(({ body }) => {
+                assert.deepEqual(body, genji);
+                return Hero.findById(genji._id).then(roundTrip);
+            })
+            .then((updated) => {
+                assert.deepEqual(updated, genji);
+            });
+    });
 });
